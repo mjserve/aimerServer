@@ -7,6 +7,7 @@
     try
     {
         const posts = await Post.find();
+        console.log(posts);
         res.json(posts);
     }
     catch (err)
@@ -17,6 +18,7 @@
 
 //Submits a post
 router.post('/',  async (req, res) => {
+    console.log(req.body);
     const post = new Post({
         title: req.body.title,
         description: req.body.description
@@ -63,11 +65,36 @@ router.delete('/:postId', async (req, res) => {
 router.patch('/:postId', async (req, res) => {
     try
     {
-        const updatedPost = await Post.updateOne(
+        let friend = {
+            first_name : req.body.first_name,
+            last_name : req.body.last_name,
+            job : req.body.job
+        }; 
+
+        console.log('Updating...');
+        console.log('Updating...');
+        console.log('Updating...');
+        console.log(friend);
+
+        /*const updatedPost = await Post.updateOne(
             {_id : req.params.postId}, 
             {$set : {title: req.body.title}}
-        );
-        res.json(updatedPost);
+        );*/
+
+        const pushFriendPost = await Post.findOneAndUpdate(
+            {_id: req.params.postId},
+            {$addToSet: {friends : friend}},
+            (error, success) => {
+                if (error){
+                    console.log(error);
+                }
+                else{
+                    console.log(success);
+                }
+            }
+        )
+        console.log(pushFriendPost);
+        res.json(pushFriendPost);
     }
     catch(err)
     {
