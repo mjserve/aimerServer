@@ -15,7 +15,7 @@ const PostSchema = mongoose.Schema({
     },
     friends: {
         type: Array,
-        'default': []
+        default: []
     }
 });
 

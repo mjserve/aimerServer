@@ -11,10 +11,12 @@ app.use(cors());
 //Import Routes
 const postsRoute = require('./routes/posts');
 const exercisesRoute = require('./routes/exercises');
+const workSessionsRoute = require('./routes/workSessions');
 
 //MIDDLEWARE
 app.use('/posts', postsRoute);
 app.use('/exercises', exercisesRoute);
+app.use('/workSessions', workSessionsRoute);
 
 //Connect to db
 mongoose.connect('mongodb://mod:admin55!@ds221416.mlab.com:21416/aimer',

@@ -63,6 +63,7 @@ router.delete('/:postId', async (req, res) => {
 
 //Update a post
 router.patch('/:postId', async (req, res) => {
+    console.log('Am hitting here!!!!')
     try
     {
         let friend = {
