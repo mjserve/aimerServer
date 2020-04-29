@@ -47,6 +47,66 @@ router.get('/:postId', async (req, res) => {
     }
 });
 
+router.get('/:postId_1/:postId_2', async (req, res) => {
+    console.log('In comparison GET...');
+    
+    try
+    {
+        const workSession_1 = await WorkSession.findById(req.params.postId_1);
+        const workSession_2 = await WorkSession.findById(req.params.postId_2);
+
+        var firstDate = new Date(workSession_1.date);
+        var secondDate = new Date(workSession_2.date);
+
+        var firstSession;
+        var secondSession;
+
+        //Compare dates of the 2 sessions to be compared and make the earlier of the two come first
+        //when returning data
+        if (firstDate > secondDate)
+        {
+            firstSession = workSession_2;
+            secondSession = workSession_1;
+        }
+        else
+        {
+            firstSession = workSession_1;
+            secondSession = workSession_2;
+        }
+
+        //Find common scenarios among the 2 sessions and create object to respond with
+        var result = {
+            sharedScenarios : []
+        };
+
+        for(var i=0; i < firstSession.scenarioList.length; i++)
+        {
+            for(var j=0; j < secondSession.scenarioList.length; j++)
+            {
+                if (firstSession.scenarioList[i].scenario_name == secondSession.scenarioList[j].scenario_name)
+                {
+                    var bothSessions = {
+                        name : firstSession.scenarioList[i].scenario_name,
+                        score_1 : firstSession.scenarioList[i].score,
+                        time_1 : firstSession.scenarioList[i].timePlayed,
+                        score_2: secondSession.scenarioList[j].score,
+                        time_2 : secondSession.scenarioList[j].timePlayed
+                    };
+
+                    result.sharedScenarios.push(bothSessions);
+                }
+            }
+        }
+
+        res.json(result);
+    }
+    catch(err)
+    {
+        res.json({msg : err});
+    }
+
+});
+
 //Delete post
 router.delete('/:postId', async (req, res) => {
     try
