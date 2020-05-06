@@ -1,6 +1,64 @@
 const express = require('express');
 const router = express.Router();
 const WorkSession = require('../models/WorkSession');
+const ScenarioType = require('../models/ScenarioType');
+const Sesh = require('../lib/sesh');
+
+ //PURELY for testing. Delete eventually
+ router.get('/testing', async (req, res) => {
+    console.log('In GET ../workSessions/testing');
+   try
+   {
+       const scenarioTypes = await ScenarioType.find();
+
+       var sampleScore = {
+           "targets" : 598,
+           "percentage": 93.4
+       };
+
+       var testStr = "503 (88.9%)"
+       var resultObj = Sesh.targetsPercentage(sampleScore, testStr);
+       const workSessions = await WorkSession.find();
+       console.log(resultObj);
+       res.json(workSessions);
+   }
+   catch (err)
+   {
+       res.json({ msg : err});
+   }
+});
+
+/*
+In progress for testing high scores
+*/ 
+router.get('/highs', async (req, res) => {
+    console.log('In GET ../workSessions/highs');
+   try
+   {
+       let highScoreList = [];
+       var tempSingleScenarioHigh = {};
+       const scenarioTypes = await ScenarioType.find();
+       const workSessions = await WorkSession.find();
+
+       scenarioTypes.map(scenario => {
+           console.log(scenario);
+           tempSingleScenarioHigh = Sesh.calculateHigh(scenario.name, workSessions);
+           highScoreList.push(tempSingleScenarioHigh);
+       });
+
+       highScoreList.map(score => {
+           console.log(score);
+       });
+       
+     
+
+       res.json(highScoreList);
+   }
+   catch (err)
+   {
+       res.json({ msg : err});
+   }
+});
 
  //gets all posts 
  router.get('/', async (req, res) => {
@@ -156,5 +214,7 @@ router.patch('/:postId', async (req, res) => {
         res.json(err);
     }
 });
+
+
 
 module.exports = router;
