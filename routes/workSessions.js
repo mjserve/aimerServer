@@ -53,6 +53,23 @@ router.get('/highs', async (req, res) => {
      
 
        res.json(highScoreList);
+
+       //PURLEY for testing. Delete
+       var regex_secs = /\d+.\d+s/g;
+       var regex_percentage = /,.+%/g;
+
+       var testStr = 'Average TTK: 2.65s , 45%';
+
+       var matched_secs = testStr.match(regex_secs);
+       var matched_percentage =  testStr.match(regex_percentage);
+
+       var final_secs = matched_secs[0];
+       var final_percentage = matched_percentage[0];
+
+       final_secs = final_secs.replace(/s/g, '')
+       final_percentage = final_percentage.replace(/%/g, '');
+       console.log(final_secs + ' ' + final_percentage);
+     
    }
    catch (err)
    {
