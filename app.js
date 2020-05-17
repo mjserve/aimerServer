@@ -19,7 +19,7 @@ app.use('/exercises', exercisesRoute);
 app.use('/workSessions', workSessionsRoute);
 
 //Connect to db
-mongoose.connect('nope',
+mongoose.connect('mongodb://mod:admin55!@ds221416.mlab.com:21416/aimer',
      {useNewUrlParser : true, 
       useUnifiedTopology: true },
       ()=>{

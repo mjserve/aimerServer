@@ -54,7 +54,7 @@ router.get('/highs', async (req, res) => {
 
        res.json(highScoreList);
 
-       //PURLEY for testing. Delete
+       /*  //PURLEY for testing. Delete
        var regex_secs = /\d+.\d+s/g;
        var regex_percentage = /,.+%/g;
 
@@ -68,7 +68,7 @@ router.get('/highs', async (req, res) => {
 
        final_secs = final_secs.replace(/s/g, '')
        final_percentage = final_percentage.replace(/%/g, '');
-       console.log(final_secs + ' ' + final_percentage);
+       console.log(final_secs + ' ' + final_percentage);  */
      
    }
    catch (err)
@@ -94,6 +94,7 @@ router.get('/highs', async (req, res) => {
 
 //Submits a post
 router.post('/',  async (req, res) => {
+    console.log('In worksessions.post add new WorkSession');
     console.log(req.body);
     const workSession = new WorkSession();
 
