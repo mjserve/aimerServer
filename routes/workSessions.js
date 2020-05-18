@@ -9,18 +9,21 @@ const Sesh = require('../lib/sesh');
     console.log('In GET ../workSessions/testing');
    try
    {
-       const scenarioTypes = await ScenarioType.find();
+    var regex_secs = /\d+.\d+s/g;
+    var regex_percentage = /,.+%/g;
 
-       var sampleScore = {
-           "targets" : 598,
-           "percentage": 93.4
-       };
+    var testStr = 'Average TTK: 2.65s , 45%';
 
-       var testStr = "503 (88.9%)"
-       var resultObj = Sesh.targetsPercentage(sampleScore, testStr);
-       const workSessions = await WorkSession.find();
-       console.log(resultObj);
-       res.json(workSessions);
+    var matched_secs = testStr.match(regex_secs);
+    var matched_percentage =  testStr.match(regex_percentage);
+
+    var ttk_val = matched_secs[0];
+    var val_percent = matched_percentage[0];
+
+    ttk_val = ttk_val.replace(/s/g, '')
+    val_percent = val_percent.replace(/%/g, '');
+    console.log(ttk_val + ' ' + val_percent);
+    res.json({msg : 'good'});
    }
    catch (err)
    {
@@ -63,12 +66,12 @@ router.get('/highs', async (req, res) => {
        var matched_secs = testStr.match(regex_secs);
        var matched_percentage =  testStr.match(regex_percentage);
 
-       var final_secs = matched_secs[0];
-       var final_percentage = matched_percentage[0];
+       var ttk_val = matched_secs[0];
+       var val_percent = matched_percentage[0];
 
-       final_secs = final_secs.replace(/s/g, '')
-       final_percentage = final_percentage.replace(/%/g, '');
-       console.log(final_secs + ' ' + final_percentage);  */
+       ttk_val = ttk_val.replace(/s/g, '')
+       val_percent = val_percent.replace(/%/g, '');
+       console.log(ttk_val + ' ' + val_percent);  */
      
    }
    catch (err)
