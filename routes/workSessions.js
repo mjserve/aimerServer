@@ -9,20 +9,51 @@ const Sesh = require('../lib/sesh');
     console.log('In GET ../workSessions/testing');
    try
    {
-    var regex_secs = /\d+.\d+s/g;
-    var regex_percentage = /,.+%/g;
+    let counter = 0;
+    const workSessions = await WorkSession.find();
+    workSessions.map(session => {
+        for(var i=0;i < session.scenarioList.length; i++)
+        {
+            if(session.scenarioList[i].scenario_name == 'Tile Frenzy 180 Strafing Tracking')
+            {
+                counter++;
+                var score = session.scenarioList[i].score;
+                var testRegexCount = /Kill Count.+[Aa]/;
 
-    var testStr = 'Average TTK: 2.65s , 45%';
+                var kCountMatch = score.match(testRegexCount);
 
-    var matched_secs = testStr.match(regex_secs);
-    var matched_percentage =  testStr.match(regex_percentage);
+                var testRegexPer = /A.+%/;
 
-    var ttk_val = matched_secs[0];
-    var val_percent = matched_percentage[0];
+                var percentageMatch = score.match(testRegexPer);
+                
+                if(kCountMatch != null)
+                {
+                    var cleanKCount = kCountMatch[0].replace(/[a-zA-Z]/g, '');
+                    cleanKCount = cleanKCount.replace(/,/g, '');
+                    cleanKCount = cleanKCount.replace(/:/g, '');
+                    cleanKCount = cleanKCount.trim();
 
-    ttk_val = ttk_val.replace(/s/g, '')
-    val_percent = val_percent.replace(/%/g, '');
-    console.log(ttk_val + ' ' + val_percent);
+                    var cleanPercentage = percentageMatch[0];
+                    var cleanPercentage = percentageMatch[0].replace(/[a-zA-Z]/g, '');
+                    cleanPercentage = cleanPercentage.replace(/:/g, '');
+                    cleanPercentage = cleanPercentage.replace(/%/g, '');
+                    cleanPercentage = cleanPercentage.trim();
+
+                    var ans = cleanKCount + '(' + cleanPercentage + ')';
+                    console.log('Final: ' + ans);
+                    console.log('id: ' + session._id);
+
+                    let finalArr = [];
+                    console.log(session.scenarioList.length);
+                    
+                    console.log(finalArr);
+                }
+            }
+        }
+    });
+
+    console.log('Num of TF180ST: ' + counter);
+
     res.json({msg : 'good'});
    }
    catch (err)
@@ -49,29 +80,14 @@ router.get('/highs', async (req, res) => {
            highScoreList.push(tempSingleScenarioHigh);
        });
 
+       console.log('PRINT HIGHS: ');
+       console.log(highScoreList);
        highScoreList.map(score => {
            console.log(score);
        });
        
-     
-
        res.json(highScoreList);
 
-       /*  //PURLEY for testing. Delete
-       var regex_secs = /\d+.\d+s/g;
-       var regex_percentage = /,.+%/g;
-
-       var testStr = 'Average TTK: 2.65s , 45%';
-
-       var matched_secs = testStr.match(regex_secs);
-       var matched_percentage =  testStr.match(regex_percentage);
-
-       var ttk_val = matched_secs[0];
-       var val_percent = matched_percentage[0];
-
-       ttk_val = ttk_val.replace(/s/g, '')
-       val_percent = val_percent.replace(/%/g, '');
-       console.log(ttk_val + ' ' + val_percent);  */
      
    }
    catch (err)
